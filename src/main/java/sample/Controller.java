@@ -5,10 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
 
 import javax.swing.*;
 import javax.vecmath.Matrix4f;
@@ -29,6 +27,11 @@ public class Controller {
     public TextField coordXform;
     public TextField angleform;
 
+    @FXML
+    ProgressBar p1 = new ProgressBar();
+    @FXML
+    Label lp1;
+
     private int WrazmerKorpusa = 0;
     private int HrazmerKorpusa = 0;
     private int LrazmerKorpusa = 0;
@@ -44,7 +47,7 @@ public class Controller {
 
     int n = 0;
     int nustnovl = 0;
-    int ploskostpostr = 0;
+    int scetchikprogress = 0;
 
 
     private JFXPanel primaryStage;
@@ -169,76 +172,19 @@ public class Controller {
         metodInstallingBeside();
         metodInstalOthers();
 
-        // metodrazmeshangletochki();
-        //  metodrazmesh(); metodproverka();
-        //  metodrazmeshryadom();
-        //  metodrazmeshostaln();
-        //metodrazmeshangletochki();
-        //metodrazmeshanglepixels();
-        //metodproverkaustanovl();
 
-      //  metodproverkaustanovl();
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setHeaderText("Расчеты завершились.");
         alert.showAndWait();
-/*
-        System.out.println("t1 X=" + osnovnoi[0].poluchtochka1(0) + " Y" + osnovnoi[0].poluchtochka1(1) + " Z" + osnovnoi[0].poluchtochka1(2));
-        System.out.println("t2 X=" + osnovnoi[0].poluchtochka2(0) + " Y" + osnovnoi[0].poluchtochka2(1) + " Z" + osnovnoi[0].poluchtochka2(2));
-        System.out.println("t3 X=" + osnovnoi[0].poluchtochka3(0) + " Y" + osnovnoi[0].poluchtochka3(1) + " Z" + osnovnoi[0].poluchtochka3(2));
-        System.out.println("t4 X=" + osnovnoi[0].poluchtochka4(0) + " Y" + osnovnoi[0].poluchtochka4(1) + " Z" + osnovnoi[0].poluchtochka4(2));
-        System.out.println("t5 X=" + osnovnoi[0].poluchtochka5(0) + " Y" + osnovnoi[0].poluchtochka5(1) + " Z" + osnovnoi[0].poluchtochka5(2));
-        System.out.println("t6 X=" + osnovnoi[0].poluchtochka6(0) + " Y" + osnovnoi[0].poluchtochka6(1) + " Z" + osnovnoi[0].poluchtochka6(2));
-        System.out.println("t7 X=" + osnovnoi[0].poluchtochka7(0) + " Y" + osnovnoi[0].poluchtochka7(1) + " Z" + osnovnoi[0].poluchtochka7(2));
-        System.out.println("t8 X=" + osnovnoi[0].poluchtochka8(0) + " Y" + osnovnoi[0].poluchtochka8(1) + " Z" + osnovnoi[0].poluchtochka8(2));
-*/
 
-       // osnovnoi[0].lengthpix();
-       // metodotobrathpix();
-      //  System.out.println("leng1  " + osnovnoi[0].lengthpix() + ";leng2 " + osnovnoi[0].lengthpix2() + ";leng3 " + osnovnoi[0].lengthpix3()
-       //         + ";leng4 " + osnovnoi[0].lengthpix4() + ";leng5 " + osnovnoi[0].lengthpix5() + ";leng6 " + osnovnoi[0].lengthpix6());
-        //System.out.println(" 1p"+osnovnoi[0].lengthpix2()+" 6p"+osnovnoi[0].lengthpix3());
         System.out.println("ok");
 
-/*
-        for(Ploskosti plqw:osnovnoi){
-            System.out.println("w "+plqw.width()+" h "+plqw.haight());
-        }
-*/
         for(int i=0;i<19;i++) {
             System.out.println(osnovnoi[i].toString());
         }
 
     }
 
-
-    public void metodrazmeshangletochki() {
-
-
-    }
-
-    private void metodrazmeshanglepixels() {
-
-
-    }
-/*
-    public void metodotobrathpix() {
-
-        for (int i = 0; i < osnovnoi[0].lengthpix(); i++) {
-            System.out.print(" x" + osnovnoi[0].pixels(0, i) + ";");
-        }
-        System.out.println();
-        for (int i = 0; i < osnovnoi[0].lengthpix(); i++) {
-            System.out.print(" y" + osnovnoi[0].pixels(1, i) + ";");
-        }
-        System.out.println();
-        for (int i = 0; i < osnovnoi[0].lengthpix(); i++) {
-            System.out.print(" z" + osnovnoi[0].pixels(2, i) + ";");
-        }
-        System.out.println();
-
-
-    }
-*/
     public void metodproverkaustanovl() {
         for(int i=0;i<bd.length;i++){
             System.out.println(bd[i].names()+";"+bd[i].width()+";"+bd[i].haight()+";"+bd[i].length()+";"+bd[i].coordX()+";"+bd[i].coordY()+";"+
@@ -247,11 +193,22 @@ public class Controller {
 
     }
 
+
+
+    public void progressbar(){
+        p1.setProgress(0.1);
+        p1.setVisible(true);
+        lp1.setText(12.666+"%");
+        lp1.setVisible(true);
+    }
+
+
     public boolean proverkaa(double x, double y, double z, int width, int height, int length,int angleX, int angleY, int angleZ) {
         boolean r = true;//означает что нет совпадений
         exit:
+        //{
         for (int i = 0; i < nustnovl; i++) {
-            if (i!=imetodinstalkoord) {
+            if (i != imetodinstalkoord) {
                 System.out.println(i);
                 if (osnovnoi[i].angleX() == 0 && osnovnoi[i].angleY() == 0 && osnovnoi[i].angleZ() == 0 && angleX == 0
                         && angleY == 0 && angleZ == 0) {
@@ -260,33 +217,33 @@ public class Controller {
                             osnovnoi[i].coordZ() <= z & osnovnoi[i].coordZ() + osnovnoi[i].lenght() >= z |
 
                             osnovnoi[i].coordX() >= x & osnovnoi[i].coordX() <= x + width &
-                                    osnovnoi[i].coordY()>= y &osnovnoi[i].coordY()<= y+height &
-                                    osnovnoi[i].coordZ()<=z&osnovnoi[i].coordZ()+osnovnoi[i].lenght()>=z|
+                                    osnovnoi[i].coordY() >= y & osnovnoi[i].coordY() <= y + height &
+                                    osnovnoi[i].coordZ() <= z & osnovnoi[i].coordZ() + osnovnoi[i].lenght() >= z |
 
-                            osnovnoi[i].coordX() <= x & osnovnoi[i].coordX()+osnovnoi[i].width()  >= x  &
-                                    osnovnoi[i].coordY()>= y &osnovnoi[i].coordY()<= y+height &
-                                    osnovnoi[i].coordZ()<=z&osnovnoi[i].coordZ()+osnovnoi[i].lenght()>=z|
+                            osnovnoi[i].coordX() <= x & osnovnoi[i].coordX() + osnovnoi[i].width() >= x &
+                                    osnovnoi[i].coordY() >= y & osnovnoi[i].coordY() <= y + height &
+                                    osnovnoi[i].coordZ() <= z & osnovnoi[i].coordZ() + osnovnoi[i].lenght() >= z |
 
-                            osnovnoi[i].coordX() <= x & osnovnoi[i].coordX() +osnovnoi[i].width() >= x  &
-                                    osnovnoi[i].coordY()<= y &osnovnoi[i].coordY()+osnovnoi[i].haight()>= y &
-                                    osnovnoi[i].coordZ()<=z&osnovnoi[i].coordZ()+osnovnoi[i].lenght()>=z|
+                            osnovnoi[i].coordX() <= x & osnovnoi[i].coordX() + osnovnoi[i].width() >= x &
+                                    osnovnoi[i].coordY() <= y & osnovnoi[i].coordY() + osnovnoi[i].haight() >= y &
+                                    osnovnoi[i].coordZ() <= z & osnovnoi[i].coordZ() + osnovnoi[i].lenght() >= z |
 
                             ///////////////////////////////
                             osnovnoi[i].coordX() >= x & osnovnoi[i].coordX() <= x + width &
-                                    osnovnoi[i].coordY()<= y &osnovnoi[i].coordY()+osnovnoi[i].haight()>= y &
-                                    osnovnoi[i].coordZ()>=z&osnovnoi[i].coordZ()<=z+length|
+                                    osnovnoi[i].coordY() <= y & osnovnoi[i].coordY() + osnovnoi[i].haight() >= y &
+                                    osnovnoi[i].coordZ() >= z & osnovnoi[i].coordZ() <= z + length |
 
                             osnovnoi[i].coordX() >= x & osnovnoi[i].coordX() <= x + width &
-                                    osnovnoi[i].coordY()>= y &osnovnoi[i].coordY()<= y+height &
-                                    osnovnoi[i].coordZ()>=z&osnovnoi[i].coordZ()<=z+length|
+                                    osnovnoi[i].coordY() >= y & osnovnoi[i].coordY() <= y + height &
+                                    osnovnoi[i].coordZ() >= z & osnovnoi[i].coordZ() <= z + length |
 
-                            osnovnoi[i].coordX() <= x & osnovnoi[i].coordX()+osnovnoi[i].width()  >= x  &
-                                    osnovnoi[i].coordY()>= y &osnovnoi[i].coordY()<= y+height &
-                                    osnovnoi[i].coordZ()>=z&osnovnoi[i].coordZ()<=z+length|
+                            osnovnoi[i].coordX() <= x & osnovnoi[i].coordX() + osnovnoi[i].width() >= x &
+                                    osnovnoi[i].coordY() >= y & osnovnoi[i].coordY() <= y + height &
+                                    osnovnoi[i].coordZ() >= z & osnovnoi[i].coordZ() <= z + length |
 
-                            osnovnoi[i].coordX() <= x & osnovnoi[i].coordX() +osnovnoi[i].width() >= x  &
-                                    osnovnoi[i].coordY()<= y &osnovnoi[i].coordY()+osnovnoi[i].haight()>= y &
-                                    osnovnoi[i].coordZ()>=z&osnovnoi[i].coordZ()<=z+length|
+                            osnovnoi[i].coordX() <= x & osnovnoi[i].coordX() + osnovnoi[i].width() >= x &
+                                    osnovnoi[i].coordY() <= y & osnovnoi[i].coordY() + osnovnoi[i].haight() >= y &
+                                    osnovnoi[i].coordZ() >= z & osnovnoi[i].coordZ() <= z + length |
 
 
                             x <= ThicknessRrazmerKorpusa || x + width >= WrazmerKorpusa - ThicknessRrazmerKorpusa ||
@@ -305,32 +262,47 @@ public class Controller {
                         System.out.println("prov " + i);
                         break exit;
                     }
-                } else {
-                    Check check = new Check();
-                    Ploskosti obj2 = new Ploskosti("check",  width, height, length,(int) x, (int) y, (int) z, angleX, angleY, angleZ);
-                    if (check.start(osnovnoi[i], obj2)) {
-                        r = false;
-                        System.out.println("x"+x+" y"+y+" z"+z);
-                        System.out.println("w"+width+" h"+height+" l"+length);
-                        System.out.println(" osn X "+osnovnoi[i].coordX()+" osnY "+osnovnoi[i].coordY()+" osnZ "+osnovnoi[i].coordZ());
-                        System.out.println("check " + i);
-                        break exit;
-                    }
                 }
 
-            }
-        }
+                    else {
+                        Check check = new Check();
+                        Ploskosti obj2 = new Ploskosti("check", width, height, length, (int) x, (int) y, (int) z, angleX, angleY, angleZ,-1000);
 
+                        if (check.start(obj2, osnovnoi[i])) {
+                            r = false;
+                            break exit;
+
+                        }
+                    }
+
+
+
+           // }
+        }
+       /* for (int i = 0; i < nustnovl; i++) {
+            if (osnovnoi[i].angleX() != 0 || osnovnoi[i].angleY() != 0 || osnovnoi[i].angleZ() != 0 || angleX != 0
+                    || angleY != 0 || angleZ != 0) {
+                Check check = new Check();
+                Ploskosti obj2 = new Ploskosti("check", width, height, length, (int) x, (int) y, (int) z, angleX, angleY, angleZ,-1000);
+                if (check.start(obj2, osnovnoi[i])) {
+                    r = false;
+                    break exit;
+                }
+            }
+        }*/
+    }
 
         return r;
     }
 int imetodinstalkoord=0;
     public void metodInstalKoord(){
+        p1.setVisible(true);
+        lp1.setVisible(true);
         System.out.println(nustnovl);
         for (int i = 0; i < bd.length; i++) {
             if (bd[i].coordX() != -1000) {
             osnovnoi[i]=new Ploskosti(bd[i].names(),bd[i].width(),bd[i].haight(),bd[i].length(),bd[i].coordX(),bd[i].coordY(),bd[i].coordZ(),
-                    bd[i].angleX(),bd[i].angleY(),bd[i].angleZ());
+                    bd[i].angleX(),bd[i].angleY(),bd[i].angleZ(),i);
                 System.out.println(bd[i].coordX()+" ");
                 Transform transform =new Transform();
 
@@ -349,7 +321,6 @@ int imetodinstalkoord=0;
                 System.out.print(rte.toString());
                 osnovnoi[i].setMatrix4f(rte);
 
-
             nustnovl++;
             }
         }
@@ -367,6 +338,8 @@ int imetodinstalkoord=0;
                  break exit;
               }
             System.out.println(i);
+            p1.setProgress(++scetchikprogress/bd.length);
+            lp1.setText(scetchikprogress/bd.length*100+"% "+scetchikprogress/bd.length);
         }
         imetodinstalkoord=-1;
     }
@@ -399,7 +372,7 @@ int imetodinstalkoord=0;
                                                         0, 0, 0)) {
                                                     osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
                                                             osnovnoi[j].coordX() + osnovnoi[j].width() + kx, osnovnoi[j].coordY() + ky, osnovnoi[j].coordZ() + kz,
-                                                            0, 0, 0);
+                                                            0, 0, 0,i);
                                                     nustnovl++;
                                                     break exit;
                                                 } else
@@ -408,7 +381,7 @@ int imetodinstalkoord=0;
                                                             0, 0, 0)) {
                                                         osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
                                                                 osnovnoi[j].coordX() - bd[i].width() - kx, osnovnoi[j].coordY() + ky, osnovnoi[j].coordZ() + kz,
-                                                                0, 0, 0);
+                                                                0, 0, 0,i);
                                                         nustnovl++;
                                                         break exit;
                                                     } else
@@ -417,7 +390,7 @@ int imetodinstalkoord=0;
                                                                 0, 0, 0)) {
                                                             osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
                                                                     osnovnoi[j].coordX() + kx, osnovnoi[j].coordY() + osnovnoi[j].haight() + ky, osnovnoi[j].coordZ() + kz,
-                                                                    0, 0, 0);
+                                                                    0, 0, 0,i);
                                                             nustnovl++;
                                                             break exit;
                                                         } else
@@ -426,7 +399,7 @@ int imetodinstalkoord=0;
                                                                     0, 0, 0)) {
                                                                 osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
                                                                         osnovnoi[j].coordX() + kx, osnovnoi[j].coordY() - bd[i].haight() - ky, osnovnoi[j].coordZ() + kz,
-                                                                        0, 0, 0);
+                                                                        0, 0, 0,i);
                                                                 nustnovl++;
                                                                 break exit;
                                                             } else
@@ -435,7 +408,7 @@ int imetodinstalkoord=0;
                                                                         0, 0, 0)) {
                                                                     osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
                                                                             osnovnoi[j].coordX() + kx, osnovnoi[j].coordY() + ky, osnovnoi[j].coordZ() + bd[i].length() + kz,
-                                                                            0, 0, 0);
+                                                                            0, 0, 0,i);
                                                                     nustnovl++;
                                                                     break exit;
                                                                 } else
@@ -444,7 +417,7 @@ int imetodinstalkoord=0;
                                                                             0, 0, 0)) {
                                                                         osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
                                                                                 osnovnoi[j].coordX() + kx, osnovnoi[j].coordY() + ky, osnovnoi[j].coordZ() - bd[j].length() - kz,
-                                                                                0, 0, 0);
+                                                                                0, 0, 0,i);
                                                                         nustnovl++;
                                                                         break exit;
                                                                     }
@@ -483,7 +456,8 @@ int imetodinstalkoord=0;
                             if (proverkaa(kx, ky, kz, bd[i].width(), bd[i].haight(), bd[i].length(),0,0,0)) {
 
                                 osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
-                                        kx, ky, kz, bd[i].angleX(), bd[i].angleY(), bd[i].angleZ());
+                                        kx, ky, kz, bd[i].angleX(), bd[i].angleY(), bd[i].angleZ(),i);
+
                                 nustnovl++;
                                 break exit;
                             }

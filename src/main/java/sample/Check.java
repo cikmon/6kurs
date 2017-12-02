@@ -199,7 +199,7 @@ public class Check
 			}else if(dergY>0){
 				startTransform.basis.rotY((float)Math.toRadians(-dergY) );
 				float dY = (float) (Math.sqrt(xo * xo + zo * zo) / 2);
-				float angleY = (float) (Math.toDegrees(Math.cos(zo / (2 * dY))));
+				float angleY = (float) (Math.toDegrees(Math.acos(zo / (2 * dY))));
 				float derggY = -dergY + angleY;
 				float XrazY = (float) (dY * Math.sin(Math.toRadians(derggY)) - dY * Math.sin(Math.toRadians(angleY)));
 				float ZrazY = (float) (dY * Math.cos(Math.toRadians(derggY)) - dY * Math.cos(Math.toRadians(angleY)));
@@ -265,7 +265,7 @@ public class Check
 				}
 			}
 		}
-		System.out.printf(
+		System.out.println(
 				"00="+prov[0][0]+" 10="+prov[1][0]+" 20="+prov[2][0]+"\n"+
 				"01="+prov[0][1]+" 11="+prov[1][1]+" 21="+prov[2][1]+"\n"+
 				"02="+prov[0][2]+" 12="+prov[1][2]+" 22="+prov[2][2]+"\n"+

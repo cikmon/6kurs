@@ -18,17 +18,17 @@ public class testCheck {
             Check check = new Check();
             {
                 Ploskosti p1 = new Ploskosti("1",
-                        313, 313, 313, 575, 395, 35, 0, 0, 0),
+                        313, 313, 313, 575, 395, 35, 0, 0, 0,-1000),
                         p2 = new Ploskosti("2",
-                                200, 800, 1100, 801, 11, 51, 0, 45, 0);
+                                200, 800, 1100, 801, 11, 51, 0, 45, 0,-1000);
                 assertTrue(check.start(p1, p2));
             }
             {
                 Ploskosti p1 = new Ploskosti("1",
-                        311, 311, 311, 35, 395, 35, 0, 0, 0),
+                        150, 50, 750, 35, 395, 35, 0, 0, 0,-1000),
                         p2 = new Ploskosti("2",
-                                200, 800, 1100, 801, 11, 51, 0, 45, 0);
-               // assertTrue(check.start(p1, p2));
+                                200, 800, 1100, 801, 11, 51, 0, 45, 0,-1000);
+                assertTrue(check.start(p1, p2));
             }
 
 
