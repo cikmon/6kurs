@@ -259,7 +259,7 @@ public class SW {
                 fw.close();
 
                 for(Ploskosti e:osnovnoi){
-                    System.out.println(e.coordX()+" y="+e.coordY()+" z="+e.coordZ()+" w="+e.width()+" h="+e.haight()+" l="+e.lenght());
+                    System.out.println(e.toString());
 
                 }
 

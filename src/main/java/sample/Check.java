@@ -261,15 +261,16 @@ public class Check
 						ii++;
 
 					////}
-					System.out.printf("world pos = %f  ,  %f,  %f\n", trans.origin.x, trans.origin.y, trans.origin.z);
+					//System.out.printf("world pos = %f  ,  %f,  %f\n", trans.origin.x, trans.origin.y, trans.origin.z);
 				}
 			}
 		}
-		System.out.println(
+		/*System.out.println(
 				"00="+prov[0][0]+" 10="+prov[1][0]+" 20="+prov[2][0]+"\n"+
 				"01="+prov[0][1]+" 11="+prov[1][1]+" 21="+prov[2][1]+"\n"+
 				"02="+prov[0][2]+" 12="+prov[1][2]+" 22="+prov[2][2]+"\n"+
 				"03="+prov[0][3]+" 13="+prov[1][3]+" 23="+prov[2][3]);
+				*/
 		boolean provkorp;
 		boolean provvjbul=prov[0][0]!=prov[0][2]||prov[1][0]!=prov[1][2]||prov[2][0]!=prov[2][2]||
 						  prov[0][1]!=prov[0][3]||prov[1][1]!=prov[1][3]||prov[2][1]!=prov[2][3];

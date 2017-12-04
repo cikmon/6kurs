@@ -86,6 +86,7 @@ public class Ploskosti {
                 ", angleX=" + angleX +
                 ", angleY=" + angleY +
                 ", angleZ=" + angleZ +
+                ", id=" + id +
                 '}';
     }
 }

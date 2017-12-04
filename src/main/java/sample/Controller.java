@@ -7,6 +7,7 @@ import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.text.Text;
 
 import javax.swing.*;
 import javax.vecmath.Matrix4f;
@@ -30,7 +31,11 @@ public class Controller {
     @FXML
     ProgressBar p1 = new ProgressBar();
     @FXML
-    Label lp1;
+    Text tt1=new Text();
+    @FXML
+    Button bt1;
+    @FXML
+    Button bt2;
 
     private int WrazmerKorpusa = 0;
     private int HrazmerKorpusa = 0;
@@ -45,9 +50,9 @@ public class Controller {
 
     private int kolvosnaclonom = 0;
 
-    int n = 0;
-    int nustnovl = 0;
-    int scetchikprogress = 0;
+    private int n = 0;
+    private int nustnovl = 0;
+    private int scetchikprogress = 0;
 
 
     private JFXPanel primaryStage;
@@ -168,6 +173,7 @@ public class Controller {
 
     @FXML
     private void handleLocaterazmesh() throws IOException, InterruptedException {
+/*
         metodInstalKoord();
         metodInstallingBeside();
         metodInstalOthers();
@@ -178,11 +184,35 @@ public class Controller {
         alert.showAndWait();
 
         System.out.println("ok");
+*/
+        p1.setVisible(true);
+        tt1.setVisible(true);
+        bt1.setDisable(true);
+        bt2.setDisable(true);
+        new Thread(() -> {
+            metodInstalKoord();
+            metodInstallingBeside();
+            metodInstalOthers();
 
+/*
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setHeaderText("Расчеты завершились.");
+            alert.showAndWait();
+*/
+            System.out.println("ok");
+            bt1.setDisable(false);
+            bt2.setDisable(false);
+            tt1.setText("Расчеты завершились "+scetchikprogress+"/"+bd.length);
+        },"TheardZ1").start();
+
+
+
+
+/*
         for(int i=0;i<19;i++) {
             System.out.println(osnovnoi[i].toString());
         }
-
+*/
     }
 
     public void metodproverkaustanovl() {
@@ -196,20 +226,27 @@ public class Controller {
 
 
     public void progressbar(){
-        p1.setProgress(0.1);
-        p1.setVisible(true);
-        lp1.setText(12.666+"%");
-        lp1.setVisible(true);
+        new Thread(()->{
+            p1.setVisible(true);
+            tt1.setVisible(true);
+            p1.setProgress(0.1);
+            tt1.setText(12.666+"%");
+
+        }).start();
+        bt1.setDisable(true);
+
+
     }
 
 
-    public boolean proverkaa(double x, double y, double z, int width, int height, int length,int angleX, int angleY, int angleZ) {
+    public boolean proverkaa(double x, double y, double z, int width, int height, int length,int angleX, int angleY, int angleZ,int id) {
         boolean r = true;//означает что нет совпадений
         exit:
         //{
         for (int i = 0; i < nustnovl; i++) {
-            if (i != imetodinstalkoord) {
-                System.out.println(i);
+           // if (i != imetodinstalkoord) {
+                if (osnovnoi[i].getId()!=id) {
+               // System.out.println(i);
                 if (osnovnoi[i].angleX() == 0 && osnovnoi[i].angleY() == 0 && osnovnoi[i].angleZ() == 0 && angleX == 0
                         && angleY == 0 && angleZ == 0) {
                     if (osnovnoi[i].coordX() >= x & osnovnoi[i].coordX() <= x + width &
@@ -259,7 +296,7 @@ public class Controller {
 */
 
                         r = false;
-                        System.out.println("prov " + i);
+                      //  System.out.println("prov " + i);
                         break exit;
                     }
                 }
@@ -294,11 +331,10 @@ public class Controller {
 
         return r;
     }
-int imetodinstalkoord=0;
+//int imetodinstalkoord=0;
     public void metodInstalKoord(){
-        p1.setVisible(true);
-        lp1.setVisible(true);
-        System.out.println(nustnovl);
+
+       // System.out.println(nustnovl);
         for (int i = 0; i < bd.length; i++) {
             if (bd[i].coordX() != -1000) {
             osnovnoi[i]=new Ploskosti(bd[i].names(),bd[i].width(),bd[i].haight(),bd[i].length(),bd[i].coordX(),bd[i].coordY(),bd[i].coordZ(),
@@ -327,25 +363,38 @@ int imetodinstalkoord=0;
         System.out.println(nustnovl);
         exit:
         for(int i=0;i<nustnovl;i++){
-            imetodinstalkoord=i;
+           // imetodinstalkoord=i;
 
-              if( ! proverkaa(osnovnoi[i].coordX(), osnovnoi[i].coordY(), osnovnoi[i].coordZ(), osnovnoi[i].width(),
-                        osnovnoi[i].haight(), osnovnoi[i].lenght(),osnovnoi[i].angleX(),osnovnoi[i].angleY(),osnovnoi[i].angleZ())) {
-                  Alert alert = new Alert(AlertType.INFORMATION);
+              if( ! proverkaa(osnovnoi[i].coordX(), osnovnoi[i].coordY(), osnovnoi[i].coordZ(), osnovnoi[i].width(), osnovnoi[i].haight(),
+                      osnovnoi[i].lenght(),osnovnoi[i].angleX(),osnovnoi[i].angleY(),osnovnoi[i].angleZ(),osnovnoi[i].getId())) {
+                 /* Alert alert = new Alert(AlertType.INFORMATION);
                   alert.setContentText("Деталь №"+i+" налазит на другие детали");
                   alert.showAndWait();
                   System.out.println("pr=" +osnovnoi[i].coordX());
-                 break exit;
+                  */
+                  tt1.setText("Деталь №"+i+" налазит на другие детали");
+                  try {
+                      Thread.sleep(100000);
+                  } catch (InterruptedException e) {
+                      e.printStackTrace();
+                  }
+                  break exit;
               }
-            System.out.println(i);
-            p1.setProgress(++scetchikprogress/bd.length);
-            lp1.setText(scetchikprogress/bd.length*100+"% "+scetchikprogress/bd.length);
+            {
+                //System.out.println(i+" i metod inst koord");
+
+            p1.setProgress((double) ++scetchikprogress/bd.length);
+                    String tre=String.format("%.4f", (double)scetchikprogress/bd.length*100);
+                 tt1.setText(tre+"% "+scetchikprogress+"/"+bd.length);
+              //  p1.setProgress(0.5);
+            }
+           // lp1.setText(scetchikprogress/bd.length*100+"% "+scetchikprogress/bd.length);
         }
-        imetodinstalkoord=-1;
+      // imetodinstalkoord=-1;
     }
 
     public void metodInstallingBeside() {
-        System.out.println(nustnovl+"  nustanovl");
+       // System.out.println(nustnovl+"  nustanovl");
         for (int i = 0; i < bd.length; i++) {
             if (bd[i].ryadom() != -1000&bd[i].coordX()==-1000) {
                 for (int j = 0; j < nustnovl; j++) {
@@ -369,7 +418,7 @@ int imetodinstalkoord=0;
 
                                                 //справа n
                                                 if (proverkaa(osnovnoi[j].coordX() + osnovnoi[j].width() + kx, osnovnoi[j].coordY() + ky, osnovnoi[j].coordZ() + kz, bd[i].width(), bd[i].haight(), bd[i].length(),
-                                                        0, 0, 0)) {
+                                                        0, 0, 0,i)) {
                                                     osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
                                                             osnovnoi[j].coordX() + osnovnoi[j].width() + kx, osnovnoi[j].coordY() + ky, osnovnoi[j].coordZ() + kz,
                                                             0, 0, 0,i);
@@ -378,7 +427,7 @@ int imetodinstalkoord=0;
                                                 } else
                                                     //слева
                                                     if (proverkaa(osnovnoi[j].coordX() - bd[i].width() - kx, osnovnoi[j].coordY() + ky, osnovnoi[j].coordZ() + kz, bd[i].width(), bd[i].haight(), bd[i].length(),
-                                                            0, 0, 0)) {
+                                                            0, 0, 0,i)) {
                                                         osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
                                                                 osnovnoi[j].coordX() - bd[i].width() - kx, osnovnoi[j].coordY() + ky, osnovnoi[j].coordZ() + kz,
                                                                 0, 0, 0,i);
@@ -387,7 +436,7 @@ int imetodinstalkoord=0;
                                                     } else
                                                         //сверху
                                                         if (proverkaa(osnovnoi[j].coordX() + kx, osnovnoi[j].coordY() + osnovnoi[j].haight() + ky, osnovnoi[j].coordZ() + kz, bd[i].width(), bd[i].haight(), bd[i].length(),
-                                                                0, 0, 0)) {
+                                                                0, 0, 0,i)) {
                                                             osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
                                                                     osnovnoi[j].coordX() + kx, osnovnoi[j].coordY() + osnovnoi[j].haight() + ky, osnovnoi[j].coordZ() + kz,
                                                                     0, 0, 0,i);
@@ -396,7 +445,7 @@ int imetodinstalkoord=0;
                                                         } else
                                                             //снизу
                                                             if (proverkaa(osnovnoi[j].coordX() + kx, osnovnoi[j].coordY() - bd[i].haight() - ky, osnovnoi[j].coordZ() + kz, bd[i].width(), bd[i].haight(), bd[i].length(),
-                                                                    0, 0, 0)) {
+                                                                    0, 0, 0,i)) {
                                                                 osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
                                                                         osnovnoi[j].coordX() + kx, osnovnoi[j].coordY() - bd[i].haight() - ky, osnovnoi[j].coordZ() + kz,
                                                                         0, 0, 0,i);
@@ -405,7 +454,7 @@ int imetodinstalkoord=0;
                                                             } else
                                                                 //сзади
                                                                 if (proverkaa(osnovnoi[j].coordX() + kx, osnovnoi[j].coordY() + ky, osnovnoi[j].coordZ() + bd[i].length() + kz, bd[i].width(), bd[i].haight(), bd[i].length(),
-                                                                        0, 0, 0)) {
+                                                                        0, 0, 0,i)) {
                                                                     osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
                                                                             osnovnoi[j].coordX() + kx, osnovnoi[j].coordY() + ky, osnovnoi[j].coordZ() + bd[i].length() + kz,
                                                                             0, 0, 0,i);
@@ -414,7 +463,7 @@ int imetodinstalkoord=0;
                                                                 } else
                                                                     //спереди
                                                                     if (proverkaa(osnovnoi[j].coordX() + kx, osnovnoi[j].coordY() + ky, osnovnoi[j].coordZ() - bd[j].length() - kz, bd[i].width(), bd[i].haight(), bd[i].length(),
-                                                                            0, 0, 0)) {
+                                                                            0, 0, 0,i)) {
                                                                         osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
                                                                                 osnovnoi[j].coordX() + kx, osnovnoi[j].coordY() + ky, osnovnoi[j].coordZ() - bd[j].length() - kz,
                                                                                 0, 0, 0,i);
@@ -440,7 +489,7 @@ int imetodinstalkoord=0;
 
 
         }
-        System.out.println(nustnovl+"  nustanovl");
+       // System.out.println(nustnovl+"  nustanovl");
 
     }
 //
@@ -453,12 +502,15 @@ int imetodinstalkoord=0;
                     for (int ky = ThicknessRrazmerKorpusa; ky < HrazmerKorpusa-ThicknessRrazmerKorpusa; ky = ky + 30) {
                         for (int kx = ThicknessRrazmerKorpusa; kx < WrazmerKorpusa-ThicknessRrazmerKorpusa; kx = kx + 30) {
 
-                            if (proverkaa(kx, ky, kz, bd[i].width(), bd[i].haight(), bd[i].length(),0,0,0)) {
+                            if (proverkaa(kx, ky, kz, bd[i].width(), bd[i].haight(), bd[i].length(),0,0,0,i)) {
 
                                 osnovnoi[nustnovl] = new Ploskosti(bd[i].names(), bd[i].width(), bd[i].haight(), bd[i].length(),
                                         kx, ky, kz, bd[i].angleX(), bd[i].angleY(), bd[i].angleZ(),i);
 
                                 nustnovl++;
+                                p1.setProgress((double)++scetchikprogress/bd.length);
+                                String tre=String.format("%.4f", (double)scetchikprogress/bd.length*100);
+                                tt1.setText(tre+"% "+scetchikprogress+"/"+bd.length);
                                 break exit;
                             }
 
